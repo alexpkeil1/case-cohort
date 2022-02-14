@@ -118,8 +118,8 @@ ccnew3 <- rawcc3 %>%
     stop = age_eof,
     event =  1,
     wt = case_when(
-      subtype1 == 1 ~ 1 / SAMPLING_RATE_SUBTYPE1,
-      subtype2 == 1 ~ 1 / SAMPLING_RATE_SUBTYPE2
+      subtype1 == 1 ~ 1 / (SAMPLING_RATE_SUBTYPE1 + SAMPLING_RATE - SAMPLING_RATE_SUBTYPE1 * SAMPLING_RATE),
+      subtype2 == 1 ~ 1 / (SAMPLING_RATE_SUBTYPE2 + SAMPLING_RATE - SAMPLING_RATE_SUBTYPE2 * SAMPLING_RATE)
     )
   ) %>%
   bind_rows(tmp3)
@@ -150,7 +150,7 @@ ccnew3_1 <- rawcc3_1 %>%
     start = age_eof - EPSILON,
     stop = age_eof,
     event =  1,
-    wt = 1 / SAMPLING_RATE_SUBTYPE1
+    wt = 1 / (SAMPLING_RATE_SUBTYPE1 + SAMPLING_RATE - SAMPLING_RATE_SUBTYPE1 * SAMPLING_RATE)
   ) %>%
   bind_rows(tmp3_1)
 
@@ -179,7 +179,7 @@ ccnew3_2 <- rawcc3_2 %>%
     start = age_eof - EPSILON,
     stop = age_eof,
     event =  1,
-    wt = subtype2 == 1 / SAMPLING_RATE_SUBTYPE2
+    wt = subtype2 == 1 / (SAMPLING_RATE_SUBTYPE2 + SAMPLING_RATE - SAMPLING_RATE_SUBTYPE2 * SAMPLING_RATE)
   ) %>%
   bind_rows(tmp3_2)
 
@@ -222,8 +222,10 @@ ccnew4 <- rawcc4 %>%
     stop = age_eof,
     event =  1,
     wt = case_when(
-      subtype1 == 1 ~ 1 / SAMPLING_RATE_SUBTYPE1,
-      subtype2 == 1 ~ 1 / SAMPLING_RATE_SUBTYPE2
+      subtype1 == 1 & groupa == 1 ~ 1 / (SAMPLING_RATE_SUBTYPE1 + SAMPLING_RATEA - SAMPLING_RATE_SUBTYPE1 * SAMPLING_RATEA),
+      subtype1 == 1 & groupa == 0 ~ 1 / (SAMPLING_RATE_SUBTYPE1 + SAMPLING_RATEB - SAMPLING_RATE_SUBTYPE1 * SAMPLING_RATEB),
+      subtype2 == 1 & groupa == 1 ~ 1 / (SAMPLING_RATE_SUBTYPE2 + SAMPLING_RATEA - SAMPLING_RATE_SUBTYPE2 * SAMPLING_RATEA),
+      subtype2 == 1 & groupa == 0 ~ 1 / (SAMPLING_RATE_SUBTYPE2 + SAMPLING_RATEB - SAMPLING_RATE_SUBTYPE2 * SAMPLING_RATEB)
     )
   ) %>%
   bind_rows(tmp4)
